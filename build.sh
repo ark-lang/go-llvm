@@ -1,7 +1,7 @@
 #!/bin/sh -xe
 
 # The version of LLVM targeted
-llvm_version="RELEASE_370"
+llvm_version="RELEASE_371"
 
 # Setup various paths
 basedir=$(dirname "$(readlink -f "$0")")
