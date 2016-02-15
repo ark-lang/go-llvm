@@ -951,6 +951,20 @@ func ConstInsertValue(agg, val Value, indices []uint32) (rv Value) {
 	return
 }
 
+func ConstInlineAsm(ty Type, asmString string, constraints string, hasSideEffects bool, isAlignStack bool) (rv Value) {
+	if ty.TypeKind() != FunctionTypeKind {
+		panic("llvm: ty argument must be FunctionType")
+	}
+
+	cAsmString := C.CString(asmString)
+	defer C.free(unsafe.Pointer(cAsmString))
+	cConstraints := C.CString(constraints)
+	defer C.free(unsafe.Pointer(cConstraints))
+	rv.C = C.LLVMConstInlineAsm(ty.C, cAsmString, cConstraints,
+		boolToLLVMBool(hasSideEffects), boolToLLVMBool(isAlignStack))
+	return
+}
+
 func BlockAddress(f Value, bb BasicBlock) (v Value) {
 	v.C = C.LLVMBlockAddress(f.C, bb.C)
 	return
@@ -1206,7 +1220,7 @@ func (b Builder) Dispose() { C.LLVMDisposeBuilder(b.C) }
 func (b Builder) SetCurrentDebugLocation(line, col uint, scope, inlinedAt Metadata) {
 	C.LLVMSetCurrentDebugLocation2(b.C, C.unsigned(line), C.unsigned(col), scope.C, inlinedAt.C)
 }
-func (b Builder) SetInstDebugLocation(v Value)    { C.LLVMSetInstDebugLocation(b.C, v.C) }
+func (b Builder) SetInstDebugLocation(v Value) { C.LLVMSetInstDebugLocation(b.C, v.C) }
 func (b Builder) InsertDeclare(module Module, storage Value, md Value) Value {
 	f := module.NamedFunction("llvm.dbg.declare")
 	if f.IsNil() {
