@@ -61,6 +61,7 @@ type DwarfLang uint32
 
 const (
 	// http://dwarfstd.org/ShowIssue.php?issue=101014.1&type=open
+	DW_LANG_C  DwarfLang = 0x0002
 	DW_LANG_Go DwarfLang = 0x0016
 )
 
