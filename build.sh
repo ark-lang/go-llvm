@@ -8,7 +8,7 @@ llvm_version="$llvm_major.$llvm_minor.$llvm_patch"
 llvm_svn_tag="RELEASE_$llvm_major$llvm_minor$llvm_patch"
 
 # Setup various paths
-basedir=$(dirname "$(readlink -f "$0")")
+basedir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 gollvmdir=$basedir/llvm
 workdir=$basedir/workdir
 llvmdir=$workdir/src
